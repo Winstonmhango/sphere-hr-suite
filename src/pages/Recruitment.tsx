@@ -199,7 +199,7 @@ export default function Recruitment() {
   const hiredCount = candidateList.filter(c => c.stage === "hired").length;
 
   return (
-    <AppLayout>
+    <AppLayout title="Recruitment" subtitle="Track candidates through hiring pipeline">
       <div className="space-y-6">
         {/* Header */}
         <div>
