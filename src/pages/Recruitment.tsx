@@ -201,14 +201,6 @@ export default function Recruitment() {
   return (
     <AppLayout title="Recruitment" subtitle="Track candidates through hiring pipeline">
       <div className="space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-xl font-semibold text-foreground tracking-tight">Recruitment</h1>
-          <p className="text-[13px] text-muted-foreground mt-0.5">
-            Track candidates through hiring pipeline
-          </p>
-        </div>
-
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4">
           {[
