@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
+import Recruitment from "./pages/Recruitment";
 import Leave from "./pages/Leave";
 import Departments from "./pages/Departments";
 import Payroll from "./pages/Payroll";
