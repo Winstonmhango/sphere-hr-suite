@@ -78,6 +78,25 @@ export interface JobPosting {
   applicants: number;
 }
 
+export interface InterviewNote {
+  id: string;
+  author: string;
+  date: string;
+  type: "phone-screen" | "technical" | "behavioral" | "culture-fit" | "note";
+  content: string;
+  rating?: number;
+}
+
+export interface ScheduledInterview {
+  id: string;
+  date: string;
+  time: string;
+  type: "phone-screen" | "technical" | "behavioral" | "culture-fit" | "panel";
+  interviewers: string[];
+  location: string;
+  status: "scheduled" | "completed" | "cancelled";
+}
+
 export interface Candidate {
   id: string;
   name: string;
@@ -92,6 +111,9 @@ export interface Candidate {
   notes: string;
   interviewDate?: string;
   avatar?: string;
+  resumeFileName?: string;
+  interviewNotes: InterviewNote[];
+  scheduledInterviews: ScheduledInterview[];
 }
 
 export const jobPostings: JobPosting[] = [
