@@ -78,6 +78,25 @@ export interface JobPosting {
   applicants: number;
 }
 
+export interface InterviewNote {
+  id: string;
+  author: string;
+  date: string;
+  type: "phone-screen" | "technical" | "behavioral" | "culture-fit" | "note";
+  content: string;
+  rating?: number;
+}
+
+export interface ScheduledInterview {
+  id: string;
+  date: string;
+  time: string;
+  type: "phone-screen" | "technical" | "behavioral" | "culture-fit" | "panel";
+  interviewers: string[];
+  location: string;
+  status: "scheduled" | "completed" | "cancelled";
+}
+
 export interface Candidate {
   id: string;
   name: string;
@@ -92,6 +111,9 @@ export interface Candidate {
   notes: string;
   interviewDate?: string;
   avatar?: string;
+  resumeFileName?: string;
+  interviewNotes: InterviewNote[];
+  scheduledInterviews: ScheduledInterview[];
 }
 
 export const jobPostings: JobPosting[] = [
@@ -103,14 +125,42 @@ export const jobPostings: JobPosting[] = [
 ];
 
 export const candidates: Candidate[] = [
-  { id: "CAN-001", name: "Alex Rivera", email: "alex.r@email.com", phone: "+1-555-0101", role: "Senior Frontend Developer", stage: "interview", appliedDate: "2026-02-18", rating: 4, source: "linkedin", jobId: "JOB-001", notes: "Strong React/TS portfolio. 6 yrs exp.", interviewDate: "2026-03-20" },
-  { id: "CAN-002", name: "Jordan Lee", email: "jordan.l@email.com", phone: "+1-555-0102", role: "Senior Frontend Developer", stage: "screening", appliedDate: "2026-02-22", rating: 3, source: "careers-page", jobId: "JOB-001", notes: "Good fundamentals, needs further screening." },
-  { id: "CAN-003", name: "Sam Patel", email: "sam.p@email.com", phone: "+1-555-0103", role: "Senior Frontend Developer", stage: "offer", appliedDate: "2026-02-16", rating: 5, source: "referral", jobId: "JOB-001", notes: "Excellent candidate. Referred by Sarah Chen." },
-  { id: "CAN-004", name: "Nina Kowalski", email: "nina.k@email.com", phone: "+1-555-0104", role: "Product Designer", stage: "interview", appliedDate: "2026-02-25", rating: 4, source: "linkedin", jobId: "JOB-002", notes: "Beautiful portfolio, strong Figma skills.", interviewDate: "2026-03-22" },
-  { id: "CAN-005", name: "Chris Tanaka", email: "chris.t@email.com", phone: "+1-555-0105", role: "Product Designer", stage: "applied", appliedDate: "2026-03-10", rating: 3, source: "indeed", jobId: "JOB-002", notes: "Junior but shows promise." },
-  { id: "CAN-006", name: "Maya Santos", email: "maya.s@email.com", phone: "+1-555-0106", role: "Data Engineer", stage: "screening", appliedDate: "2026-03-05", rating: 4, source: "linkedin", jobId: "JOB-003", notes: "Strong SQL and Python. Spark experience." },
-  { id: "CAN-007", name: "Ethan Wright", email: "ethan.w@email.com", phone: "+1-555-0107", role: "Senior Frontend Developer", stage: "rejected", appliedDate: "2026-02-19", rating: 2, source: "indeed", jobId: "JOB-001", notes: "Insufficient experience with TypeScript." },
-  { id: "CAN-008", name: "Olivia Chen", email: "olivia.c@email.com", phone: "+1-555-0108", role: "Senior Frontend Developer", stage: "hired", appliedDate: "2026-02-17", rating: 5, source: "referral", jobId: "JOB-001", notes: "Accepted offer. Start date: April 1." },
-  { id: "CAN-009", name: "Liam Okafor", email: "liam.o@email.com", phone: "+1-555-0109", role: "Data Engineer", stage: "applied", appliedDate: "2026-03-12", rating: 3, source: "careers-page", jobId: "JOB-003", notes: "Background in data science, pivoting to eng." },
-  { id: "CAN-010", name: "Ava Mitchell", email: "ava.m@email.com", phone: "+1-555-0110", role: "DevOps Contractor", stage: "interview", appliedDate: "2026-03-08", rating: 4, source: "linkedin", jobId: "JOB-005", notes: "AWS certified. 4 yrs DevOps.", interviewDate: "2026-03-19" },
+  { id: "CAN-001", name: "Alex Rivera", email: "alex.r@email.com", phone: "+1-555-0101", role: "Senior Frontend Developer", stage: "interview", appliedDate: "2026-02-18", rating: 4, source: "linkedin", jobId: "JOB-001", notes: "Strong React/TS portfolio. 6 yrs exp.", interviewDate: "2026-03-20", resumeFileName: "alex_rivera_resume.pdf", interviewNotes: [
+    { id: "IN-001", author: "Lisa Park", date: "2026-03-05", type: "phone-screen", content: "Great communication skills. Solid understanding of React ecosystem. Recommended for technical round.", rating: 4 },
+    { id: "IN-002", author: "Sarah Chen", date: "2026-03-12", type: "technical", content: "Solved coding challenge efficiently. Good system design thinking. Minor gaps in testing practices.", rating: 4 },
+  ], scheduledInterviews: [
+    { id: "SI-001", date: "2026-03-20", time: "10:00 AM", type: "behavioral", interviewers: ["Lisa Park", "James Wilson"], location: "Google Meet", status: "scheduled" },
+  ] },
+  { id: "CAN-002", name: "Jordan Lee", email: "jordan.l@email.com", phone: "+1-555-0102", role: "Senior Frontend Developer", stage: "screening", appliedDate: "2026-02-22", rating: 3, source: "careers-page", jobId: "JOB-001", notes: "Good fundamentals, needs further screening.", resumeFileName: "jordan_lee_cv.pdf", interviewNotes: [
+    { id: "IN-003", author: "Aisha Okafor", date: "2026-03-08", type: "note", content: "Resume looks promising. Scheduling phone screen." },
+  ], scheduledInterviews: [] },
+  { id: "CAN-003", name: "Sam Patel", email: "sam.p@email.com", phone: "+1-555-0103", role: "Senior Frontend Developer", stage: "offer", appliedDate: "2026-02-16", rating: 5, source: "referral", jobId: "JOB-001", notes: "Excellent candidate. Referred by Sarah Chen.", resumeFileName: "sam_patel_resume.pdf", interviewNotes: [
+    { id: "IN-004", author: "Lisa Park", date: "2026-02-28", type: "phone-screen", content: "Exceptional communicator. Deep frontend expertise.", rating: 5 },
+    { id: "IN-005", author: "Sarah Chen", date: "2026-03-06", type: "technical", content: "Aced the technical interview. Best candidate so far.", rating: 5 },
+    { id: "IN-006", author: "James Wilson", date: "2026-03-10", type: "culture-fit", content: "Great team fit. Aligns well with our values.", rating: 5 },
+  ], scheduledInterviews: [
+    { id: "SI-002", date: "2026-03-06", time: "2:00 PM", type: "technical", interviewers: ["Sarah Chen"], location: "Zoom", status: "completed" },
+    { id: "SI-003", date: "2026-03-10", time: "11:00 AM", type: "culture-fit", interviewers: ["James Wilson", "Lisa Park"], location: "On-site", status: "completed" },
+  ] },
+  { id: "CAN-004", name: "Nina Kowalski", email: "nina.k@email.com", phone: "+1-555-0104", role: "Product Designer", stage: "interview", appliedDate: "2026-02-25", rating: 4, source: "linkedin", jobId: "JOB-002", notes: "Beautiful portfolio, strong Figma skills.", interviewDate: "2026-03-22", interviewNotes: [
+    { id: "IN-007", author: "Marcus Johnson", date: "2026-03-15", type: "phone-screen", content: "Impressive portfolio walkthrough. Strong design systems knowledge.", rating: 4 },
+  ], scheduledInterviews: [
+    { id: "SI-004", date: "2026-03-22", time: "1:00 PM", type: "technical", interviewers: ["Marcus Johnson", "Mei Lin"], location: "Google Meet", status: "scheduled" },
+  ] },
+  { id: "CAN-005", name: "Chris Tanaka", email: "chris.t@email.com", phone: "+1-555-0105", role: "Product Designer", stage: "applied", appliedDate: "2026-03-10", rating: 3, source: "indeed", jobId: "JOB-002", notes: "Junior but shows promise.", interviewNotes: [], scheduledInterviews: [] },
+  { id: "CAN-006", name: "Maya Santos", email: "maya.s@email.com", phone: "+1-555-0106", role: "Data Engineer", stage: "screening", appliedDate: "2026-03-05", rating: 4, source: "linkedin", jobId: "JOB-003", notes: "Strong SQL and Python. Spark experience.", resumeFileName: "maya_santos_resume.pdf", interviewNotes: [
+    { id: "IN-008", author: "Carlos Rivera", date: "2026-03-14", type: "note", content: "Reviewed resume — very strong data pipeline experience. Moving to phone screen." },
+  ], scheduledInterviews: [] },
+  { id: "CAN-007", name: "Ethan Wright", email: "ethan.w@email.com", phone: "+1-555-0107", role: "Senior Frontend Developer", stage: "rejected", appliedDate: "2026-02-19", rating: 2, source: "indeed", jobId: "JOB-001", notes: "Insufficient experience with TypeScript.", interviewNotes: [
+    { id: "IN-009", author: "Aisha Okafor", date: "2026-02-26", type: "phone-screen", content: "Candidate lacked depth in TypeScript and modern frameworks. Not a fit for senior role.", rating: 2 },
+  ], scheduledInterviews: [] },
+  { id: "CAN-008", name: "Olivia Chen", email: "olivia.c@email.com", phone: "+1-555-0108", role: "Senior Frontend Developer", stage: "hired", appliedDate: "2026-02-17", rating: 5, source: "referral", jobId: "JOB-001", notes: "Accepted offer. Start date: April 1.", resumeFileName: "olivia_chen_resume.pdf", interviewNotes: [
+    { id: "IN-010", author: "Sarah Chen", date: "2026-02-24", type: "technical", content: "Outstanding technical skills. Recommended immediate hire.", rating: 5 },
+  ], scheduledInterviews: [] },
+  { id: "CAN-009", name: "Liam Okafor", email: "liam.o@email.com", phone: "+1-555-0109", role: "Data Engineer", stage: "applied", appliedDate: "2026-03-12", rating: 3, source: "careers-page", jobId: "JOB-003", notes: "Background in data science, pivoting to eng.", interviewNotes: [], scheduledInterviews: [] },
+  { id: "CAN-010", name: "Ava Mitchell", email: "ava.m@email.com", phone: "+1-555-0110", role: "DevOps Contractor", stage: "interview", appliedDate: "2026-03-08", rating: 4, source: "linkedin", jobId: "JOB-005", notes: "AWS certified. 4 yrs DevOps.", interviewDate: "2026-03-19", resumeFileName: "ava_mitchell_cv.pdf", interviewNotes: [
+    { id: "IN-011", author: "James Wilson", date: "2026-03-14", type: "phone-screen", content: "Strong DevOps background. AWS certs verified. Good cultural fit indicators.", rating: 4 },
+  ], scheduledInterviews: [
+    { id: "SI-005", date: "2026-03-19", time: "3:00 PM", type: "technical", interviewers: ["James Wilson", "David Kim"], location: "Zoom", status: "scheduled" },
+  ] },
 ];
