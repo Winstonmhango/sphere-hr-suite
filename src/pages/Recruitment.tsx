@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -63,6 +64,17 @@ export default function Recruitment() {
       const updated = prev.map(c => (c.id === id ? { ...c, stage: newStage } : c));
       const moved = updated.find(c => c.id === id);
       if (moved && selectedCandidate?.id === id) setSelectedCandidate(moved);
+
+      if (newStage === "hired" && moved) {
+        toast.success(`${moved.name} has been hired!`, {
+          description: "An onboarding checklist has been created automatically.",
+          action: {
+            label: "View Onboarding",
+            onClick: () => window.location.href = "/onboarding",
+          },
+        });
+      }
+
       return updated;
     });
   };
