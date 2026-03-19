@@ -16,6 +16,7 @@ const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
   { label: "Employees", icon: Users, href: "/employees" },
   { label: "Recruitment", icon: UserPlus, href: "/recruitment" },
+  { label: "Onboarding", icon: ClipboardList, href: "/onboarding" },
   { label: "Leave", icon: CalendarDays, href: "/leave" },
   { label: "Departments", icon: Building2, href: "/departments" },
   { label: "Payroll", icon: DollarSign, href: "/payroll" },

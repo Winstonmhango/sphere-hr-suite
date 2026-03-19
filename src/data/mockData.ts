@@ -164,3 +164,65 @@ export const candidates: Candidate[] = [
     { id: "SI-005", date: "2026-03-19", time: "3:00 PM", type: "technical", interviewers: ["James Wilson", "David Kim"], location: "Zoom", status: "scheduled" },
   ] },
 ];
+
+// Onboarding types
+export type OnboardingTaskCategory = "documents" | "equipment" | "orientation" | "access" | "training";
+export type OnboardingTaskStatus = "pending" | "in-progress" | "completed";
+
+export interface OnboardingTask {
+  id: string;
+  title: string;
+  description: string;
+  category: OnboardingTaskCategory;
+  status: OnboardingTaskStatus;
+  assignee: string;
+  dueDate: string;
+  completedDate?: string;
+}
+
+export interface OnboardingChecklist {
+  id: string;
+  candidateId: string;
+  candidateName: string;
+  role: string;
+  startDate: string;
+  createdDate: string;
+  status: "active" | "completed";
+  tasks: OnboardingTask[];
+}
+
+export const defaultOnboardingTasks: Omit<OnboardingTask, "id" | "dueDate">[] = [
+  { title: "Collect signed offer letter", description: "Ensure the signed offer letter is returned and filed.", category: "documents", status: "pending", assignee: "Aisha Okafor" },
+  { title: "Verify ID & work authorization", description: "Collect and verify government-issued ID and work authorization documents.", category: "documents", status: "pending", assignee: "Lisa Park" },
+  { title: "Submit tax forms (W-4)", description: "Employee must complete and submit W-4 and state tax withholding forms.", category: "documents", status: "pending", assignee: "Thomas Brown" },
+  { title: "Set up direct deposit", description: "Collect banking information for payroll direct deposit.", category: "documents", status: "pending", assignee: "Thomas Brown" },
+  { title: "Order laptop & peripherals", description: "Provision laptop, monitor, keyboard, and mouse per role requirements.", category: "equipment", status: "pending", assignee: "James Wilson" },
+  { title: "Prepare workstation / desk", description: "Assign desk, chair, and ensure workspace is ready for day one.", category: "equipment", status: "pending", assignee: "Lisa Park" },
+  { title: "Issue access badge", description: "Create and program building access badge.", category: "equipment", status: "pending", assignee: "Lisa Park" },
+  { title: "Create email & Slack accounts", description: "Set up corporate email, Slack workspace access, and communication tools.", category: "access", status: "pending", assignee: "James Wilson" },
+  { title: "Grant system & tool access", description: "Provision access to required software tools (GitHub, Jira, Figma, etc.).", category: "access", status: "pending", assignee: "James Wilson" },
+  { title: "Schedule Day 1 orientation", description: "Book orientation session covering company culture, policies, and benefits.", category: "orientation", status: "pending", assignee: "Lisa Park" },
+  { title: "Assign onboarding buddy", description: "Pair new hire with a team member for their first two weeks.", category: "orientation", status: "pending", assignee: "Aisha Okafor" },
+  { title: "Intro meeting with manager", description: "Schedule 1:1 with direct manager for first day.", category: "orientation", status: "pending", assignee: "Aisha Okafor" },
+  { title: "Enroll in required training", description: "Register for compliance training, security awareness, and role-specific courses.", category: "training", status: "pending", assignee: "Lisa Park" },
+  { title: "Review employee handbook", description: "Ensure new hire receives and acknowledges the employee handbook.", category: "training", status: "pending", assignee: "Aisha Okafor" },
+];
+
+export const onboardingChecklists: OnboardingChecklist[] = [
+  {
+    id: "OB-001",
+    candidateId: "CAN-008",
+    candidateName: "Olivia Chen",
+    role: "Senior Frontend Developer",
+    startDate: "2026-04-01",
+    createdDate: "2026-03-15",
+    status: "active",
+    tasks: defaultOnboardingTasks.map((t, i) => ({
+      ...t,
+      id: `OBT-001-${i}`,
+      dueDate: "2026-03-28",
+      ...(i < 3 ? { status: "completed" as OnboardingTaskStatus, completedDate: "2026-03-17" } : {}),
+      ...(i === 3 ? { status: "in-progress" as OnboardingTaskStatus } : {}),
+    })),
+  },
+];
