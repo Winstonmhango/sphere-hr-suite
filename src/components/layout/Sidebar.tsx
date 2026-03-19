@@ -9,6 +9,7 @@ import {
   BarChart3,
   Settings,
   UserPlus,
+  ClipboardList,
 } from "lucide-react";
 
 const navItems = [
