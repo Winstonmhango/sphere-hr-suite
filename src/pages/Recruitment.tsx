@@ -64,6 +64,17 @@ export default function Recruitment() {
       const updated = prev.map(c => (c.id === id ? { ...c, stage: newStage } : c));
       const moved = updated.find(c => c.id === id);
       if (moved && selectedCandidate?.id === id) setSelectedCandidate(moved);
+
+      if (newStage === "hired" && moved) {
+        toast.success(`${moved.name} has been hired!`, {
+          description: "An onboarding checklist has been created automatically.",
+          action: {
+            label: "View Onboarding",
+            onClick: () => window.location.href = "/onboarding",
+          },
+        });
+      }
+
       return updated;
     });
   };
