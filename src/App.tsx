@@ -24,6 +24,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="/employees" element={<Employees />} />
           <Route path="/recruitment" element={<Recruitment />} />
