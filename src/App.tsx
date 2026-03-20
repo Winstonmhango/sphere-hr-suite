@@ -12,6 +12,7 @@ import Departments from "./pages/Departments";
 import Payroll from "./pages/Payroll";
 import Reports from "./pages/Reports";
 import SettingsPage from "./pages/Settings";
+import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
