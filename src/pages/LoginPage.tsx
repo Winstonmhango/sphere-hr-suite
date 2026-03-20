@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { LoginOverlay } from "@/components/auth/LoginOverlay";
 import { AuthLogo } from "@/components/auth/AuthLogo";
 import { AuthBackground } from "@/components/auth/AuthBackground";
+import { useAuth } from "@/auth/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login, defaultCredentials, isAuthenticated } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,17 +21,30 @@ export default function LoginPage() {
   const [showOverlay, setShowOverlay] = useState(false);
   const [serverError, setServerError] = useState("");
 
+  const redirectTo = useMemo(() => {
+    const state = location.state as any;
+    return typeof state?.from === "string" ? state.from : "/";
+  }, [location.state]);
+
+  // Already logged in — go to dashboard
+  if (isAuthenticated) {
+    return <Navigate to={redirectTo} replace />;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setServerError("");
     setIsSubmitting(true);
     setShowOverlay(true);
 
-    // TODO: Replace with real Supabase auth when Cloud is enabled
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      // Placeholder: accept any credentials for now
-      navigate("/", { replace: true });
+      const result = await login(email, password);
+      if (!result.ok) {
+        setServerError(result.error || "Login failed");
+        setShowOverlay(false);
+        return;
+      }
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Login failed");
       setShowOverlay(false);
@@ -42,10 +58,8 @@ export default function LoginPage() {
       <LoginOverlay isVisible={showOverlay} />
 
       <div className="flex min-h-screen bg-background">
-        {/* Left panel — branding */}
         <AuthBackground />
 
-        {/* Right panel — form */}
         <div className="flex w-full lg:w-1/2 items-center justify-center p-6 sm:p-12">
           <div className="w-full max-w-sm space-y-8">
             <AuthLogo />
@@ -118,11 +132,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full h-11"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full h-11" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -133,6 +143,17 @@ export default function LoginPage() {
                 )}
               </Button>
             </form>
+
+            {/* Default credentials hint */}
+            <div className="rounded-lg border bg-muted/50 p-4 space-y-1.5">
+              <p className="text-xs font-medium text-muted-foreground">Demo credentials</p>
+              <p className="text-xs text-muted-foreground">
+                Email: <span className="font-mono text-foreground">{defaultCredentials.email}</span>
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Password: <span className="font-mono text-foreground">{defaultCredentials.password}</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
