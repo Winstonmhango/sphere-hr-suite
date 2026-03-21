@@ -55,24 +55,25 @@ export default function LoginPage() {
 
   return (
     <>
-      <LoginOverlay isVisible={showOverlay} />
+      <LoginOverlay isVisible={showOverlay} message="Logging you in to Sphere HR..." />
 
-      <div className="flex min-h-screen bg-background">
-        <AuthBackground />
+      <div className="flex min-h-screen w-full">
+        {/* Left side — form */}
+        <div className="flex w-full flex-col justify-center space-y-8 px-8 md:w-1/2 md:px-16 lg:px-32 bg-card">
+          <div className="mb-10">
+            <AuthLogo size="md" />
+          </div>
 
-        <div className="flex w-full lg:w-1/2 items-center justify-center p-6 sm:p-12">
-          <div className="w-full max-w-sm space-y-8">
-            <AuthLogo />
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              Login to your account
+            </h1>
+            <p className="text-muted-foreground">
+              Enter your credentials to access your account
+            </p>
+          </div>
 
-            <div className="space-y-1 text-center">
-              <h1 className="text-xl font-semibold tracking-tight text-foreground">
-                Login to your account
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Enter your credentials to access your account
-              </p>
-            </div>
-
+          <div className="space-y-6">
             {serverError && (
               <Alert variant="destructive">
                 <AlertDescription>{serverError}</AlertDescription>
@@ -81,16 +82,16 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-foreground">
+                <label htmlFor="email" className="text-sm text-muted-foreground font-medium">
                   Email
                 </label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@company.com"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-11"
+                  className="h-12 border-border focus:border-primary focus:ring-primary"
                   required
                   autoComplete="username"
                 />
@@ -98,12 +99,12 @@ export default function LoginPage() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="text-sm font-medium text-foreground">
+                  <label htmlFor="password" className="text-sm text-muted-foreground font-medium">
                     Password
                   </label>
                   <button
                     type="button"
-                    className="text-xs text-primary hover:underline"
+                    className="text-sm text-primary hover:underline pointer-events-none opacity-60"
                     tabIndex={-1}
                   >
                     Forgot password?
@@ -113,49 +114,55 @@ export default function LoginPage() {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-11 pr-10"
+                    className="h-12 pr-10 border-border focus:border-primary focus:ring-primary"
                     required
                     autoComplete="current-password"
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                     onClick={() => setShowPassword((v) => !v)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                     tabIndex={-1}
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
 
-              <Button type="submit" className="w-full h-11" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? (
-                  <span className="flex items-center gap-2">
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  <>
+                    <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
                     Logging in...
-                  </span>
+                  </>
                 ) : (
                   "Sign In"
                 )}
               </Button>
             </form>
 
-            {/* Default credentials hint */}
-            <div className="rounded-lg border bg-muted/50 p-4 space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground">Demo credentials</p>
-              <p className="text-xs text-muted-foreground">
+            <div className="rounded-lg border border-border bg-muted/50 px-4 py-3 text-sm">
+              <p className="text-foreground font-semibold">Demo credentials</p>
+              <p className="text-muted-foreground">
                 Email: <span className="font-mono text-foreground">{defaultCredentials.email}</span>
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground">
                 Password: <span className="font-mono text-foreground">{defaultCredentials.password}</span>
               </p>
             </div>
           </div>
         </div>
+
+        {/* Right side — branded background */}
+        <AuthBackground />
       </div>
     </>
   );
