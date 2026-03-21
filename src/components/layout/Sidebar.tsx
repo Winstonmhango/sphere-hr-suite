@@ -10,7 +10,11 @@ import {
   Settings,
   UserPlus,
   ClipboardList,
+  UserCog,
+  UserCheck,
+  LogOut,
 } from "lucide-react";
+import { useAuth } from "@/auth/AuthContext";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
@@ -21,6 +25,11 @@ const navItems = [
   { label: "Departments", icon: Building2, href: "/departments" },
   { label: "Payroll", icon: DollarSign, href: "/payroll" },
   { label: "Reports", icon: BarChart3, href: "/reports" },
+];
+
+const adminItems = [
+  { label: "Register User", icon: UserCog, href: "/register-user" },
+  { label: "Register Employee", icon: UserCheck, href: "/register-employee" },
 ];
 
 export function Sidebar() {
