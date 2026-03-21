@@ -15,6 +15,8 @@ import Payroll from "./pages/Payroll";
 import Reports from "./pages/Reports";
 import SettingsPage from "./pages/Settings";
 import LoginPage from "./pages/LoginPage";
+import RegisterUser from "./pages/RegisterUser";
+import RegisterEmployee from "./pages/RegisterEmployee";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +39,8 @@ const App = () => (
             <Route path="/payroll" element={<ProtectedRoute><Payroll /></ProtectedRoute>} />
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+            <Route path="/register-user" element={<ProtectedRoute><RegisterUser /></ProtectedRoute>} />
+            <Route path="/register-employee" element={<ProtectedRoute><RegisterEmployee /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
