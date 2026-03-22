@@ -1,4 +1,5 @@
 import React from "react";
+import authBg from "@/assets/auth-bg.jpg";
 
 const modules = [
   { name: "Employees", delay: "0s" },
