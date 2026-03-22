@@ -226,3 +226,126 @@ export const onboardingChecklists: OnboardingChecklist[] = [
     })),
   },
 ];
+
+// ── Salary Components ──────────────────────────────────────────
+
+export type SalaryComponentType = "earning" | "deduction" | "bonus";
+
+export interface SalaryComponent {
+  id: string;
+  name: string;
+  type: SalaryComponentType;
+  amount: number;
+  isPercentage: boolean; // if true, amount is % of base
+  recurring: boolean;
+}
+
+export interface EmployeeSalary {
+  employeeId: string;
+  baseSalary: number;
+  components: SalaryComponent[];
+  effectiveDate: string;
+  currency: string;
+}
+
+export const defaultSalaryComponents: Omit<SalaryComponent, "id">[] = [
+  { name: "Housing Allowance", type: "earning", amount: 15, isPercentage: true, recurring: true },
+  { name: "Transport Allowance", type: "earning", amount: 500, isPercentage: false, recurring: true },
+  { name: "Medical Allowance", type: "earning", amount: 300, isPercentage: false, recurring: true },
+  { name: "Income Tax", type: "deduction", amount: 22, isPercentage: true, recurring: true },
+  { name: "Social Security", type: "deduction", amount: 6.2, isPercentage: true, recurring: true },
+  { name: "Health Insurance", type: "deduction", amount: 450, isPercentage: false, recurring: true },
+  { name: "Retirement (401k)", type: "deduction", amount: 5, isPercentage: true, recurring: true },
+];
+
+const buildComponents = (baseSalary: number, bonusAmt?: number): SalaryComponent[] => {
+  const comps: SalaryComponent[] = defaultSalaryComponents.map((c, i) => ({
+    ...c,
+    id: `SC-${i}`,
+  }));
+  if (bonusAmt) {
+    comps.push({ id: "SC-BONUS", name: "Performance Bonus", type: "bonus", amount: bonusAmt, isPercentage: false, recurring: false });
+  }
+  return comps;
+};
+
+export const employeeSalaries: EmployeeSalary[] = [
+  { employeeId: "EMP-001", baseSalary: 145000, components: buildComponents(145000, 5000), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-002", baseSalary: 120000, components: buildComponents(120000, 3000), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-003", baseSalary: 135000, components: buildComponents(135000), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-004", baseSalary: 125000, components: buildComponents(125000, 4000), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-005", baseSalary: 110000, components: buildComponents(110000, 2500), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-006", baseSalary: 95000, components: buildComponents(95000), effectiveDate: "2025-12-01", currency: "USD" },
+  { employeeId: "EMP-007", baseSalary: 90000, components: buildComponents(90000, 1500), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-008", baseSalary: 105000, components: buildComponents(105000, 3500), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-009", baseSalary: 85000, components: buildComponents(85000, 2000), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-010", baseSalary: 115000, components: buildComponents(115000), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-011", baseSalary: 100000, components: buildComponents(100000, 2000), effectiveDate: "2025-01-01", currency: "USD" },
+  { employeeId: "EMP-012", baseSalary: 140000, components: buildComponents(140000, 6000), effectiveDate: "2025-01-01", currency: "USD" },
+];
+
+// ── Attendance ─────────────────────────────────────────────────
+
+export type AttendanceStatus = "present" | "absent" | "late" | "half-day" | "remote";
+
+export interface AttendanceRecord {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  date: string;
+  checkIn?: string;
+  checkOut?: string;
+  status: AttendanceStatus;
+  hoursWorked?: number;
+  note?: string;
+}
+
+export const attendanceRecords: AttendanceRecord[] = [
+  { id: "ATT-001", employeeId: "EMP-001", employeeName: "Sarah Chen", date: "2026-03-22", checkIn: "08:45", checkOut: "17:30", status: "present", hoursWorked: 8.75 },
+  { id: "ATT-002", employeeId: "EMP-002", employeeName: "Marcus Johnson", date: "2026-03-22", checkIn: "09:15", checkOut: "18:00", status: "present", hoursWorked: 8.75 },
+  { id: "ATT-003", employeeId: "EMP-003", employeeName: "Priya Sharma", date: "2026-03-22", status: "absent", note: "On leave" },
+  { id: "ATT-004", employeeId: "EMP-004", employeeName: "James Wilson", date: "2026-03-22", checkIn: "07:55", checkOut: "16:45", status: "remote", hoursWorked: 8.83, note: "Working from home" },
+  { id: "ATT-005", employeeId: "EMP-005", employeeName: "Lisa Park", date: "2026-03-22", checkIn: "09:05", checkOut: "17:15", status: "present", hoursWorked: 8.17 },
+  { id: "ATT-006", employeeId: "EMP-006", employeeName: "David Kim", date: "2026-03-22", checkIn: "10:20", checkOut: "18:30", status: "late", hoursWorked: 8.17, note: "Traffic delay" },
+  { id: "ATT-007", employeeId: "EMP-007", employeeName: "Emma Thompson", date: "2026-03-22", checkIn: "08:30", checkOut: "13:00", status: "half-day", hoursWorked: 4.5, note: "Doctor appointment" },
+  { id: "ATT-008", employeeId: "EMP-008", employeeName: "Carlos Rivera", date: "2026-03-22", checkIn: "08:50", checkOut: "17:45", status: "present", hoursWorked: 8.92 },
+  { id: "ATT-009", employeeId: "EMP-009", employeeName: "Aisha Okafor", date: "2026-03-22", checkIn: "09:00", checkOut: "17:30", status: "present", hoursWorked: 8.5 },
+  { id: "ATT-010", employeeId: "EMP-011", employeeName: "Mei Lin", date: "2026-03-22", checkIn: "08:40", checkOut: "17:20", status: "remote", hoursWorked: 8.67, note: "Remote day" },
+  { id: "ATT-011", employeeId: "EMP-012", employeeName: "Thomas Brown", date: "2026-03-22", checkIn: "08:00", checkOut: "18:00", status: "present", hoursWorked: 10 },
+  // Previous day
+  { id: "ATT-012", employeeId: "EMP-001", employeeName: "Sarah Chen", date: "2026-03-21", checkIn: "08:50", checkOut: "17:20", status: "present", hoursWorked: 8.5 },
+  { id: "ATT-013", employeeId: "EMP-002", employeeName: "Marcus Johnson", date: "2026-03-21", checkIn: "09:30", checkOut: "17:00", status: "late", hoursWorked: 7.5, note: "Late arrival" },
+  { id: "ATT-014", employeeId: "EMP-004", employeeName: "James Wilson", date: "2026-03-21", checkIn: "08:00", checkOut: "17:00", status: "present", hoursWorked: 9 },
+];
+
+// ── Tasks ──────────────────────────────────────────────────────
+
+export type TaskPriority = "low" | "medium" | "high" | "urgent";
+export type TaskStatus = "todo" | "in-progress" | "review" | "done";
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  assigneeId: string;
+  assigneeName: string;
+  priority: TaskPriority;
+  status: TaskStatus;
+  dueDate: string;
+  createdDate: string;
+  category: string;
+  completedDate?: string;
+}
+
+export const tasks: Task[] = [
+  { id: "TSK-001", title: "Complete Q1 performance reviews", description: "Review and submit performance evaluations for all direct reports.", assigneeId: "EMP-001", assigneeName: "Sarah Chen", priority: "high", status: "in-progress", dueDate: "2026-03-25", createdDate: "2026-03-10", category: "HR" },
+  { id: "TSK-002", title: "Update design system tokens", description: "Align Figma tokens with the latest brand refresh.", assigneeId: "EMP-002", assigneeName: "Marcus Johnson", priority: "medium", status: "todo", dueDate: "2026-03-28", createdDate: "2026-03-15", category: "Design" },
+  { id: "TSK-003", title: "Prepare onboarding kit for new hire", description: "Compile welcome materials, equipment list, and first-week schedule for Olivia Chen.", assigneeId: "EMP-005", assigneeName: "Lisa Park", priority: "high", status: "in-progress", dueDate: "2026-03-28", createdDate: "2026-03-16", category: "People Ops" },
+  { id: "TSK-004", title: "Deploy CI/CD pipeline v2", description: "Migrate from Jenkins to GitHub Actions for all microservices.", assigneeId: "EMP-004", assigneeName: "James Wilson", priority: "urgent", status: "review", dueDate: "2026-03-22", createdDate: "2026-03-05", category: "Engineering" },
+  { id: "TSK-005", title: "Quarterly blog post draft", description: "Write a 1500-word post on company culture for the careers page.", assigneeId: "EMP-007", assigneeName: "Emma Thompson", priority: "low", status: "todo", dueDate: "2026-04-01", createdDate: "2026-03-18", category: "Marketing" },
+  { id: "TSK-006", title: "Data warehouse migration plan", description: "Document migration steps from Redshift to BigQuery.", assigneeId: "EMP-008", assigneeName: "Carlos Rivera", priority: "high", status: "in-progress", dueDate: "2026-03-30", createdDate: "2026-03-12", category: "Analytics" },
+  { id: "TSK-007", title: "Recruit sourcing sprint", description: "Source 20 qualified candidates for open Engineering roles.", assigneeId: "EMP-009", assigneeName: "Aisha Okafor", priority: "medium", status: "in-progress", dueDate: "2026-03-26", createdDate: "2026-03-14", category: "People Ops" },
+  { id: "TSK-008", title: "Budget forecast — Q2", description: "Prepare Q2 departmental budget forecasts for leadership review.", assigneeId: "EMP-012", assigneeName: "Thomas Brown", priority: "high", status: "todo", dueDate: "2026-03-27", createdDate: "2026-03-17", category: "Finance" },
+  { id: "TSK-009", title: "Fix accessibility audit issues", description: "Resolve 12 WCAG AA violations found in the latest audit.", assigneeId: "EMP-006", assigneeName: "David Kim", priority: "medium", status: "todo", dueDate: "2026-04-05", createdDate: "2026-03-20", category: "Engineering" },
+  { id: "TSK-010", title: "User research interview synthesis", description: "Compile findings from 8 user interviews into actionable insights.", assigneeId: "EMP-011", assigneeName: "Mei Lin", priority: "medium", status: "done", dueDate: "2026-03-19", createdDate: "2026-03-08", category: "Design", completedDate: "2026-03-18" },
+];
