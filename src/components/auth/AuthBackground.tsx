@@ -19,10 +19,10 @@ const modules = [
 export function AuthBackground({ children }: { children?: React.ReactNode }) {
   return (
     <div className="hidden md:block md:w-1/2 relative overflow-hidden">
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/70 via-primary/75 to-primary/90 mix-blend-multiply" />
-      <div className="absolute inset-0 bg-primary" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[hsl(245,58%,45%)]/70 via-[hsl(245,58%,40%)]/70 to-[hsl(245,58%,30%)]/70" />
+      {/* Background image */}
+      <img src={authBg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/75 to-primary/90" />
 
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-8 text-center">
         {/* Floating module pills */}
