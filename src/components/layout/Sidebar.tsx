@@ -13,16 +13,22 @@ import {
   UserCog,
   UserCheck,
   LogOut,
+  Clock,
+  ListTodo,
+  Wallet,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
   { label: "Employees", icon: Users, href: "/employees" },
+  { label: "Attendance", icon: Clock, href: "/attendance" },
+  { label: "Tasks", icon: ListTodo, href: "/tasks" },
   { label: "Recruitment", icon: UserPlus, href: "/recruitment" },
   { label: "Onboarding", icon: ClipboardList, href: "/onboarding" },
   { label: "Leave", icon: CalendarDays, href: "/leave" },
   { label: "Departments", icon: Building2, href: "/departments" },
+  { label: "Salary", icon: Wallet, href: "/salary" },
   { label: "Payroll", icon: DollarSign, href: "/payroll" },
   { label: "Reports", icon: BarChart3, href: "/reports" },
 ];
