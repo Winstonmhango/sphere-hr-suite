@@ -1,19 +1,22 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { employees } from "@/data/mockData";
+import { employees as initialEmployees, Employee } from "@/data/mockData";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { Search, Plus, Filter } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { AddEmployeeModal } from "@/components/employees/AddEmployeeModal";
 
 export default function Employees() {
+  const [employeeList, setEmployeeList] = useState<Employee[]>(initialEmployees);
   const [search, setSearch] = useState("");
   const [filterDept, setFilterDept] = useState<string>("all");
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const departments = ["all", ...new Set(employees.map((e) => e.department))];
+  const departments = ["all", ...new Set(employeeList.map((e) => e.department))];
 
-  const filtered = employees.filter((e) => {
+  const filtered = employeeList.filter((e) => {
     const matchSearch =
       e.name.toLowerCase().includes(search.toLowerCase()) ||
       e.role.toLowerCase().includes(search.toLowerCase()) ||
@@ -23,7 +26,7 @@ export default function Employees() {
   });
 
   return (
-    <AppLayout title="Employee Directory" subtitle={`${employees.length} employees`}>
+    <AppLayout title="Employee Directory" subtitle={`${employeeList.length} employees`}>
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
@@ -53,7 +56,7 @@ export default function Employees() {
             ))}
           </div>
         </div>
-        <Button size="sm" className="h-8 text-[13px] gap-1.5">
+        <Button size="sm" className="h-8 text-[13px] gap-1.5" onClick={() => setModalOpen(true)}>
           <Plus size={14} />
           Add Employee
         </Button>
@@ -115,6 +118,15 @@ export default function Employees() {
           </div>
         )}
       </div>
+
+      <AddEmployeeModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onSave={(emp) => {
+          const newEmp: Employee = { ...emp, id: `EMP-${Date.now()}` };
+          setEmployeeList((prev) => [...prev, newEmp]);
+        }}
+      />
     </AppLayout>
   );
 }

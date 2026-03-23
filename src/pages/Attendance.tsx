@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { attendanceRecords, AttendanceStatus } from "@/data/mockData";
-import { Clock, UserCheck, UserX, Timer, Laptop, AlertCircle } from "lucide-react";
+import { attendanceRecords as initialRecords, AttendanceRecord, AttendanceStatus } from "@/data/mockData";
+import { Clock, UserCheck, UserX, Timer, Laptop, AlertCircle, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { LogAttendanceModal } from "@/components/attendance/LogAttendanceModal";
 
 const statusConfig: Record<AttendanceStatus, { label: string; color: string; icon: typeof Clock }> = {
   present: { label: "Present", color: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20", icon: UserCheck },
@@ -13,8 +15,11 @@ const statusConfig: Record<AttendanceStatus, { label: string; color: string; ico
 };
 
 export default function Attendance() {
+  const [records, setRecords] = useState<AttendanceRecord[]>(initialRecords);
   const [selectedDate, setSelectedDate] = useState("2026-03-22");
-  const dayRecords = attendanceRecords.filter((r) => r.date === selectedDate);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const dayRecords = records.filter((r) => r.date === selectedDate);
 
   const summary = {
     present: dayRecords.filter((r) => r.status === "present").length,
@@ -33,6 +38,9 @@ export default function Attendance() {
           onChange={(e) => setSelectedDate(e.target.value)}
           className="sphere-card px-4 py-2 text-[13px] text-foreground bg-card border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
+        <Button size="sm" className="h-8 text-[13px] gap-1.5" onClick={() => setModalOpen(true)}>
+          <Plus size={14} /> Log Attendance
+        </Button>
         <div className="flex gap-3 ml-auto">
           {(["present", "absent", "late", "remote"] as const).map((s) => {
             const cfg = statusConfig[s];
@@ -95,6 +103,16 @@ export default function Attendance() {
           </tbody>
         </table>
       </div>
+
+      <LogAttendanceModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        defaultDate={selectedDate}
+        onSave={(rec) => {
+          const newRec: AttendanceRecord = { ...rec, id: `ATT-${Date.now()}` };
+          setRecords((prev) => [...prev, newRec]);
+        }}
+      />
     </AppLayout>
   );
 }

@@ -1,28 +1,38 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { leaveRequests } from "@/data/mockData";
+import { leaveRequests as initialRequests, LeaveRequest } from "@/data/mockData";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { Check, X } from "lucide-react";
+import { Check, X, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { NewLeaveRequestModal } from "@/components/leave/NewLeaveRequestModal";
 
 type TabType = "all" | "pending" | "approved" | "rejected";
 
 export default function Leave() {
+  const [requests, setRequests] = useState<LeaveRequest[]>(initialRequests);
   const [tab, setTab] = useState<TabType>("all");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const tabs: { value: TabType; label: string; count: number }[] = [
-    { value: "all", label: "All", count: leaveRequests.length },
-    { value: "pending", label: "Pending", count: leaveRequests.filter((r) => r.status === "pending").length },
-    { value: "approved", label: "Approved", count: leaveRequests.filter((r) => r.status === "approved").length },
-    { value: "rejected", label: "Rejected", count: leaveRequests.filter((r) => r.status === "rejected").length },
+    { value: "all", label: "All", count: requests.length },
+    { value: "pending", label: "Pending", count: requests.filter((r) => r.status === "pending").length },
+    { value: "approved", label: "Approved", count: requests.filter((r) => r.status === "approved").length },
+    { value: "rejected", label: "Rejected", count: requests.filter((r) => r.status === "rejected").length },
   ];
 
-  const filtered = tab === "all" ? leaveRequests : leaveRequests.filter((r) => r.status === tab);
+  const filtered = tab === "all" ? requests : requests.filter((r) => r.status === tab);
+
+  const updateStatus = (id: string, status: "approved" | "rejected") => {
+    setRequests((prev) => prev.map((r) => r.id === id ? { ...r, status } : r));
+  };
 
   return (
-    <AppLayout title="Leave Management" subtitle={`${leaveRequests.filter(r => r.status === 'pending').length} pending requests`}>
+    <AppLayout title="Leave Management" subtitle={`${requests.filter(r => r.status === 'pending').length} pending requests`}>
+      {/* Toolbar */}
+      <div className="flex items-center justify-between mb-4">
       {/* Segmented Control */}
-      <div className="flex items-center rounded-lg border bg-card p-0.5 mb-4 w-fit">
+      <div className="flex items-center rounded-lg border bg-card p-0.5 w-fit">
         {tabs.map((t) => (
           <button
             key={t.value}
@@ -41,6 +51,10 @@ export default function Leave() {
             </span>
           </button>
         ))}
+      </div>
+        <Button size="sm" className="h-8 text-[13px] gap-1.5" onClick={() => setModalOpen(true)}>
+          <Plus size={14} /> New Request
+        </Button>
       </div>
 
       {/* Table */}
@@ -92,12 +106,14 @@ export default function Leave() {
                     <div className="flex items-center justify-end gap-1.5">
                       <motion.button
                         whileTap={{ scale: 0.9 }}
+                        onClick={() => updateStatus(req.id, "approved")}
                         className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-emerald-50 text-emerald-600 transition-colors"
                       >
                         <Check size={14} />
                       </motion.button>
                       <motion.button
                         whileTap={{ scale: 0.9 }}
+                        onClick={() => updateStatus(req.id, "rejected")}
                         className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-red-50 text-red-500 transition-colors"
                       >
                         <X size={14} />
@@ -110,6 +126,15 @@ export default function Leave() {
           </tbody>
         </table>
       </div>
+
+      <NewLeaveRequestModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onSave={(req) => {
+          const newReq: LeaveRequest = { ...req, id: `LR-${Date.now()}`, status: "pending" };
+          setRequests((prev) => [...prev, newReq]);
+        }}
+      />
     </AppLayout>
   );
 }

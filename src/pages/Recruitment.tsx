@@ -11,14 +11,16 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Search, Briefcase, Users, UserCheck, Star, MapPin, ArrowRight,
+  Search, Briefcase, Users, UserCheck, Star, MapPin, ArrowRight, Plus,
 } from "lucide-react";
 import {
-  candidates as initialCandidates, jobPostings,
-  type Candidate, type PipelineStage, type InterviewNote, type ScheduledInterview,
+  candidates as initialCandidates, jobPostings as initialJobPostings,
+  type Candidate, type JobPosting, type PipelineStage, type InterviewNote, type ScheduledInterview,
 } from "@/data/mockData";
 import { CandidateCard } from "@/components/recruitment/CandidateCard";
 import { CandidateSlideOver } from "@/components/recruitment/CandidateSlideOver";
+import { AddJobPostingModal } from "@/components/recruitment/AddJobPostingModal";
+import { AddCandidateModal } from "@/components/recruitment/AddCandidateModal";
 
 const stageConfig: Record<PipelineStage, { label: string; color: string; bgColor: string }> = {
   applied: { label: "Applied", color: "text-muted-foreground", bgColor: "bg-muted" },
@@ -47,10 +49,13 @@ function RatingStars({ rating }: { rating: number }) {
 
 export default function Recruitment() {
   const [candidateList, setCandidateList] = useState<Candidate[]>(initialCandidates);
+  const [jobList, setJobList] = useState<JobPosting[]>(initialJobPostings);
   const [search, setSearch] = useState("");
   const [selectedJob, setSelectedJob] = useState<string>("all");
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [slideOverOpen, setSlideOverOpen] = useState(false);
+  const [addJobOpen, setAddJobOpen] = useState(false);
+  const [addCandidateOpen, setAddCandidateOpen] = useState(false);
 
   const openCandidate = (candidate: Candidate) => {
     // Get latest version from state
@@ -113,8 +118,8 @@ export default function Recruitment() {
     return matchesSearch && matchesJob;
   });
 
-  const openJobs = jobPostings.filter(j => j.status === "open");
-  const totalApplicants = jobPostings.reduce((s, j) => s + j.applicants, 0);
+  const openJobs = jobList.filter(j => j.status === "open");
+  const totalApplicants = jobList.reduce((s, j) => s + j.applicants, 0);
   const inPipeline = candidateList.filter(c => !["hired", "rejected"].includes(c.stage)).length;
   const hiredCount = candidateList.filter(c => c.stage === "hired").length;
 
@@ -159,8 +164,14 @@ export default function Recruitment() {
               </div>
               <select value={selectedJob} onChange={(e) => setSelectedJob(e.target.value)} className="h-8 px-2 rounded-md border bg-background text-[13px] text-foreground">
                 <option value="all">All Positions</option>
-                {jobPostings.map(j => (<option key={j.id} value={j.id}>{j.title}</option>))}
+                {jobList.map(j => (<option key={j.id} value={j.id}>{j.title}</option>))}
               </select>
+              <Button size="sm" variant="outline" className="h-8 text-[13px] gap-1" onClick={() => setAddCandidateOpen(true)}>
+                <Plus size={13} /> Add Candidate
+              </Button>
+              <Button size="sm" className="h-8 text-[13px] gap-1" onClick={() => setAddJobOpen(true)}>
+                <Plus size={13} /> Post Job
+              </Button>
             </div>
           </div>
 
@@ -214,7 +225,7 @@ export default function Recruitment() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {jobPostings.map((job) => (
+                    {jobList.map((job) => (
                       <TableRow key={job.id}>
                         <TableCell className="text-[13px] font-medium">{job.title}</TableCell>
                         <TableCell className="text-[13px] text-muted-foreground">{job.department}</TableCell>
@@ -291,6 +302,18 @@ export default function Recruitment() {
         onAddNote={addNote}
         onAddInterview={addInterview}
         onUploadResume={uploadResume}
+      />
+
+      <AddJobPostingModal
+        open={addJobOpen}
+        onOpenChange={setAddJobOpen}
+        onSave={(posting) => setJobList((prev) => [...prev, posting])}
+      />
+
+      <AddCandidateModal
+        open={addCandidateOpen}
+        onOpenChange={setAddCandidateOpen}
+        onSave={(candidate) => setCandidateList((prev) => [...prev, candidate])}
       />
     </AppLayout>
   );

@@ -1,13 +1,24 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { departmentStats } from "@/data/mockData";
-import { employees } from "@/data/mockData";
+import { departmentStats as initialDepts, DepartmentStat, employees } from "@/data/mockData";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AddDepartmentModal } from "@/components/departments/AddDepartmentModal";
 
 export default function Departments() {
+  const [depts, setDepts] = useState<DepartmentStat[]>(initialDepts);
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
-    <AppLayout title="Departments" subtitle={`${departmentStats.length} departments`}>
+    <AppLayout title="Departments" subtitle={`${depts.length} departments`}>
+      <div className="flex justify-end mb-4">
+        <Button size="sm" className="h-8 text-[13px] gap-1.5" onClick={() => setModalOpen(true)}>
+          <Plus size={14} /> Add Department
+        </Button>
+      </div>
       <div className="grid grid-cols-3 gap-4">
-        {departmentStats.map((dept, i) => {
+        {depts.map((dept, i) => {
           const deptEmployees = employees.filter((e) => e.department === dept.name);
           return (
             <motion.div
@@ -68,6 +79,12 @@ export default function Departments() {
           );
         })}
       </div>
+
+      <AddDepartmentModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onSave={(dept) => setDepts((prev) => [...prev, dept])}
+      />
     </AppLayout>
   );
 }

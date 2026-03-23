@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { tasks, TaskStatus, TaskPriority } from "@/data/mockData";
-import { CheckCircle2, Circle, Clock, Eye, AlertTriangle, ArrowUp, ArrowRight, ArrowDown, Flame } from "lucide-react";
+import { tasks as initialTasks, Task, TaskStatus, TaskPriority } from "@/data/mockData";
+import { CheckCircle2, Circle, Clock, Eye, AlertTriangle, ArrowUp, ArrowRight, ArrowDown, Flame, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AddTaskModal } from "@/components/tasks/AddTaskModal";
 
 const statusConfig: Record<TaskStatus, { label: string; color: string; icon: typeof Circle }> = {
   "todo": { label: "To Do", color: "bg-muted text-muted-foreground border-border", icon: Circle },
@@ -19,21 +21,25 @@ const priorityConfig: Record<TaskPriority, { label: string; color: string; icon:
 };
 
 export default function Tasks() {
+  const [taskList, setTaskList] = useState<Task[]>(initialTasks);
   const [filterStatus, setFilterStatus] = useState<TaskStatus | "all">("all");
-  const filtered = filterStatus === "all" ? tasks : tasks.filter((t) => t.status === filterStatus);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const filtered = filterStatus === "all" ? taskList : taskList.filter((t) => t.status === filterStatus);
 
   const counts = {
-    all: tasks.length,
-    todo: tasks.filter((t) => t.status === "todo").length,
-    "in-progress": tasks.filter((t) => t.status === "in-progress").length,
-    review: tasks.filter((t) => t.status === "review").length,
-    done: tasks.filter((t) => t.status === "done").length,
+    all: taskList.length,
+    todo: taskList.filter((t) => t.status === "todo").length,
+    "in-progress": taskList.filter((t) => t.status === "in-progress").length,
+    review: taskList.filter((t) => t.status === "review").length,
+    done: taskList.filter((t) => t.status === "done").length,
   };
 
   return (
-    <AppLayout title="Tasks" subtitle={`${tasks.length} total tasks`}>
+    <AppLayout title="Tasks" subtitle={`${taskList.length} total tasks`}>
       {/* Filters */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex items-center justify-between mb-6">
+      <div className="flex gap-2">
         {(["all", "todo", "in-progress", "review", "done"] as const).map((s) => (
           <button
             key={s}
@@ -48,6 +54,10 @@ export default function Tasks() {
             <span className="ml-1.5 tabular-nums">{counts[s]}</span>
           </button>
         ))}
+      </div>
+        <Button size="sm" className="h-8 text-[13px] gap-1.5" onClick={() => setModalOpen(true)}>
+          <Plus size={14} /> Add Task
+        </Button>
       </div>
 
       {/* Task List */}
@@ -109,6 +119,19 @@ export default function Tasks() {
           </tbody>
         </table>
       </div>
+
+      <AddTaskModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        onSave={(t) => {
+          const newTask: Task = {
+            ...t,
+            id: `TSK-${Date.now()}`,
+            createdDate: new Date().toISOString().slice(0, 10),
+          };
+          setTaskList((prev) => [...prev, newTask]);
+        }}
+      />
     </AppLayout>
   );
 }
