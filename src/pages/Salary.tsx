@@ -124,6 +124,18 @@ export default function Salary() {
                         <td colSpan={4} className="py-2 px-5 pl-12 text-[12px] font-semibold text-foreground">Monthly Net Pay</td>
                         <td className="py-2 px-5 text-right text-[13px] font-mono font-bold text-foreground tabular-nums" colSpan={2}>${Math.round(bd.net).toLocaleString()}</td>
                       </tr>
+                      <tr className="border-b">
+                        <td colSpan={6} className="py-2 px-5 pl-12">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-[12px] text-primary h-7 gap-1"
+                            onClick={(e) => { e.stopPropagation(); setSelectedEmployee({ id: es.employeeId, name: emp.name }); setComponentModalOpen(true); }}
+                          >
+                            <Plus size={12} /> Add Component
+                          </Button>
+                        </td>
+                      </tr>
                     </>
                   )}
                 </motion.tbody>
