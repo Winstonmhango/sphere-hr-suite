@@ -43,6 +43,8 @@ function ComponentRow({ comp, monthly }: { comp: SalaryComponent; monthly: numbe
 
 export default function Salary() {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [componentModalOpen, setComponentModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<{ id: string; name: string } | null>(null);
 
   const totalAnnual = employeeSalaries.reduce((s, es) => s + es.baseSalary, 0);
   const activeCount = employeeSalaries.filter((es) => {
