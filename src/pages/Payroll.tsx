@@ -115,6 +115,8 @@ export default function Payroll() {
           </tbody>
         </table>
       </div>
+
+      <PayrollRunWizard open={wizardOpen} onOpenChange={setWizardOpen} />
     </AppLayout>
   );
 }

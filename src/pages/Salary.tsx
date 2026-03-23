@@ -132,6 +132,17 @@ export default function Salary() {
           </tbody>
         </table>
       </div>
+
+      {selectedEmployee && (
+        <SalaryComponentModal
+          open={componentModalOpen}
+          onOpenChange={setComponentModalOpen}
+          employeeName={selectedEmployee.name}
+          onSave={(comp) => {
+            console.log("New component for", selectedEmployee.id, comp);
+          }}
+        />
+      )}
     </AppLayout>
   );
 }
