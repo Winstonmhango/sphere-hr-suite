@@ -2,7 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { employees, employeeSalaries, EmployeeSalary, SalaryComponent } from "@/data/mockData";
-import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift } from "lucide-react";
+import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SalaryComponentModal } from "@/components/salary/SalaryComponentModal";
 
 function calcSalaryBreakdown(salary: EmployeeSalary) {
   const monthly = salary.baseSalary / 12;
