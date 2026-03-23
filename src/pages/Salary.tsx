@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { employees, employeeSalaries, EmployeeSalary, SalaryComponent } from "@/data/mockData";
-import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift, Plus } from "lucide-react";
+import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift, Plus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SalaryComponentModal } from "@/components/salary/SalaryComponentModal";
 import { AddEmployeeSalaryModal } from "@/components/salary/AddEmployeeSalaryModal";
