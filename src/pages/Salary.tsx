@@ -2,9 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { employees, employeeSalaries, EmployeeSalary, SalaryComponent } from "@/data/mockData";
-import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift, Plus } from "lucide-react";
+import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift, Plus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SalaryComponentModal } from "@/components/salary/SalaryComponentModal";
+import { AddEmployeeSalaryModal } from "@/components/salary/AddEmployeeSalaryModal";
 
 function calcSalaryBreakdown(salary: EmployeeSalary) {
   const monthly = salary.baseSalary / 12;
@@ -44,6 +45,7 @@ function ComponentRow({ comp, monthly }: { comp: SalaryComponent; monthly: numbe
 export default function Salary() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [componentModalOpen, setComponentModalOpen] = useState(false);
+  const [addEmployeeModalOpen, setAddEmployeeModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<{ id: string; name: string } | null>(null);
 
   const totalAnnual = employeeSalaries.reduce((s, es) => s + es.baseSalary, 0);
@@ -54,6 +56,13 @@ export default function Salary() {
 
   return (
     <AppLayout title="Employee Salary" subtitle="Salary structure & compensation details">
+      {/* Header with Add button */}
+      <div className="flex items-center justify-between mb-6">
+        <div />
+        <Button onClick={() => setAddEmployeeModalOpen(true)} className="text-[13px] gap-1.5">
+          <UserPlus size={14} /> Add Employee
+        </Button>
+      </div>
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="sphere-card p-5">
@@ -155,6 +164,15 @@ export default function Salary() {
           }}
         />
       )}
+
+      <AddEmployeeSalaryModal
+        open={addEmployeeModalOpen}
+        onOpenChange={setAddEmployeeModalOpen}
+        existingEmployeeIds={employeeSalaries.map((es) => es.employeeId)}
+        onSave={(salary) => {
+          console.log("New salary record", salary);
+        }}
+      />
     </AppLayout>
   );
 }
