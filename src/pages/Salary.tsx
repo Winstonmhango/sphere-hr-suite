@@ -56,6 +56,13 @@ export default function Salary() {
 
   return (
     <AppLayout title="Employee Salary" subtitle="Salary structure & compensation details">
+      {/* Header with Add button */}
+      <div className="flex items-center justify-between mb-6">
+        <div />
+        <Button onClick={() => setAddEmployeeModalOpen(true)} className="text-[13px] gap-1.5">
+          <UserPlus size={14} /> Add Employee
+        </Button>
+      </div>
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="sphere-card p-5">
