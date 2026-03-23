@@ -164,6 +164,15 @@ export default function Salary() {
           }}
         />
       )}
+
+      <AddEmployeeSalaryModal
+        open={addEmployeeModalOpen}
+        onOpenChange={setAddEmployeeModalOpen}
+        existingEmployeeIds={employeeSalaries.map((es) => es.employeeId)}
+        onSave={(salary) => {
+          console.log("New salary record", salary);
+        }}
+      />
     </AppLayout>
   );
 }

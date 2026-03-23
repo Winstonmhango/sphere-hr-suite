@@ -141,7 +141,7 @@ export function AddEmployeeSalaryModal({ open, onOpenChange, existingEmployeeIds
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-medium text-foreground truncate">{emp.name}</p>
-                          <p className="text-[11px] text-muted-foreground">{emp.department} · {emp.position}</p>
+                          <p className="text-[11px] text-muted-foreground">{emp.department} · {emp.role}</p>
                         </div>
                       </div>
                     ))}
