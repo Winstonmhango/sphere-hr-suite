@@ -2,7 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { employees, employeeSalaries, EmployeeSalary, SalaryComponent } from "@/data/mockData";
-import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift } from "lucide-react";
+import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SalaryComponentModal } from "@/components/salary/SalaryComponentModal";
 
 function calcSalaryBreakdown(salary: EmployeeSalary) {
   const monthly = salary.baseSalary / 12;
@@ -41,6 +43,8 @@ function ComponentRow({ comp, monthly }: { comp: SalaryComponent; monthly: numbe
 
 export default function Salary() {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [componentModalOpen, setComponentModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<{ id: string; name: string } | null>(null);
 
   const totalAnnual = employeeSalaries.reduce((s, es) => s + es.baseSalary, 0);
   const activeCount = employeeSalaries.filter((es) => {
@@ -120,6 +124,18 @@ export default function Salary() {
                         <td colSpan={4} className="py-2 px-5 pl-12 text-[12px] font-semibold text-foreground">Monthly Net Pay</td>
                         <td className="py-2 px-5 text-right text-[13px] font-mono font-bold text-foreground tabular-nums" colSpan={2}>${Math.round(bd.net).toLocaleString()}</td>
                       </tr>
+                      <tr className="border-b">
+                        <td colSpan={6} className="py-2 px-5 pl-12">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-[12px] text-primary h-7 gap-1"
+                            onClick={(e) => { e.stopPropagation(); setSelectedEmployee({ id: es.employeeId, name: emp.name }); setComponentModalOpen(true); }}
+                          >
+                            <Plus size={12} /> Add Component
+                          </Button>
+                        </td>
+                      </tr>
                     </>
                   )}
                 </motion.tbody>
@@ -128,6 +144,17 @@ export default function Salary() {
           </tbody>
         </table>
       </div>
+
+      {selectedEmployee && (
+        <SalaryComponentModal
+          open={componentModalOpen}
+          onOpenChange={setComponentModalOpen}
+          employeeName={selectedEmployee.name}
+          onSave={(comp) => {
+            console.log("New component for", selectedEmployee.id, comp);
+          }}
+        />
+      )}
     </AppLayout>
   );
 }

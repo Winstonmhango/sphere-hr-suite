@@ -1,6 +1,10 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { employees, employeeSalaries } from "@/data/mockData";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { PayrollRunWizard } from "@/components/payroll/PayrollRunWizard";
 
 function calcMonthlyBreakdown(employeeId: string) {
   const es = employeeSalaries.find((s) => s.employeeId === employeeId);
@@ -23,6 +27,7 @@ function calcMonthlyBreakdown(employeeId: string) {
 }
 
 export default function Payroll() {
+  const [wizardOpen, setWizardOpen] = useState(false);
   const activeEmployees = employees.filter((e) => e.status !== "inactive");
   const breakdowns = activeEmployees.map((e) => ({ emp: e, bd: calcMonthlyBreakdown(e.id) }));
   const totalGross = breakdowns.reduce((s, b) => s + b.bd.gross, 0);
@@ -31,6 +36,11 @@ export default function Payroll() {
 
   return (
     <AppLayout title="Payroll" subtitle="March 2026 cycle">
+      <div className="flex justify-end mb-4">
+        <Button onClick={() => setWizardOpen(true)} className="text-[13px] gap-1.5">
+          <Plus size={14} /> New Payroll Run
+        </Button>
+      </div>
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="sphere-card p-5">
@@ -111,6 +121,8 @@ export default function Payroll() {
           </tbody>
         </table>
       </div>
+
+      <PayrollRunWizard open={wizardOpen} onOpenChange={setWizardOpen} />
     </AppLayout>
   );
 }
