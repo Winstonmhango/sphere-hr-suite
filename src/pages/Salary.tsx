@@ -5,6 +5,7 @@ import { employees, employeeSalaries, EmployeeSalary, SalaryComponent } from "@/
 import { ChevronDown, ChevronRight, TrendingUp, TrendingDown, Gift, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SalaryComponentModal } from "@/components/salary/SalaryComponentModal";
+import { AddEmployeeSalaryModal } from "@/components/salary/AddEmployeeSalaryModal";
 
 function calcSalaryBreakdown(salary: EmployeeSalary) {
   const monthly = salary.baseSalary / 12;
