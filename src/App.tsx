@@ -21,6 +21,12 @@ import LoginPage from "./pages/LoginPage";
 import RegisterUser from "./pages/RegisterUser";
 import RegisterEmployee from "./pages/RegisterEmployee";
 import NotFound from "./pages/NotFound";
+import Inventory from "./pages/Inventory";
+import Warehouses from "./pages/Warehouses";
+import StockManagement from "./pages/StockManagement";
+import Customers from "./pages/Customers";
+import Suppliers from "./pages/Suppliers";
+import Invoices from "./pages/Invoices";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +49,12 @@ const App = () => (
             <Route path="/departments" element={<ProtectedRoute><Departments /></ProtectedRoute>} />
             <Route path="/salary" element={<ProtectedRoute><Salary /></ProtectedRoute>} />
             <Route path="/payroll" element={<ProtectedRoute><Payroll /></ProtectedRoute>} />
+            <Route path="/inventory" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
+            <Route path="/warehouses" element={<ProtectedRoute><Warehouses /></ProtectedRoute>} />
+            <Route path="/stock-management" element={<ProtectedRoute><StockManagement /></ProtectedRoute>} />
+            <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
+            <Route path="/suppliers" element={<ProtectedRoute><Suppliers /></ProtectedRoute>} />
+            <Route path="/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
             <Route path="/register-user" element={<ProtectedRoute><RegisterUser /></ProtectedRoute>} />

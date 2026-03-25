@@ -16,6 +16,11 @@ import {
   Clock,
   ListTodo,
   Wallet,
+  Package,
+  Warehouse,
+  TrendingUp,
+  User,
+  FileText,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
 
@@ -30,6 +35,12 @@ const navItems = [
   { label: "Departments", icon: Building2, href: "/departments" },
   { label: "Salary", icon: Wallet, href: "/salary" },
   { label: "Payroll", icon: DollarSign, href: "/payroll" },
+  { label: "Inventory", icon: Package, href: "/inventory" },
+  { label: "Warehouses", icon: Warehouse, href: "/warehouses" },
+  { label: "Stock Management", icon: TrendingUp, href: "/stock-management" },
+  { label: "Customers", icon: User, href: "/customers" },
+  { label: "Suppliers", icon: Building2, href: "/suppliers" },
+  { label: "Invoices", icon: FileText, href: "/invoices" },
   { label: "Reports", icon: BarChart3, href: "/reports" },
 ];
 
