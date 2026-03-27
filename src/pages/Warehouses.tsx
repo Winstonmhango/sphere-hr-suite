@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { InventoryStatCard } from "@/components/inventory/InventoryStatCard";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 // Mock data
 const warehouseStats = [

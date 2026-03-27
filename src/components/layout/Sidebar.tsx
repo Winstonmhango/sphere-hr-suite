@@ -21,6 +21,10 @@ import {
   TrendingUp,
   User,
   FileText,
+  Calculator,
+  Receipt,
+  Target,
+  Ticket,
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
 
@@ -41,6 +45,15 @@ const navItems = [
   { label: "Customers", icon: User, href: "/customers" },
   { label: "Suppliers", icon: Building2, href: "/suppliers" },
   { label: "Invoices", icon: FileText, href: "/invoices" },
+  { label: "Accounting", icon: Calculator, href: "/accounting" },
+  { label: "Chart of Accounts", icon: TrendingUp, href: "/chart-of-accounts" },
+  { label: "Journal Entries", icon: Receipt, href: "/journal-entries" },
+  { label: "Trial Balance", icon: BarChart3, href: "/trial-balance" },
+  { label: "Budget", icon: Target, href: "/budget" },
+  { label: "Budget Planning", icon: Calculator, href: "/budget-planning" },
+  { label: "Budget Tracking", icon: Wallet, href: "/budget-tracking" },
+  { label: "Budget Variance", icon: BarChart3, href: "/budget-variance" },
+  { label: "Vouchers", icon: Ticket, href: "/vouchers" },
   { label: "Reports", icon: BarChart3, href: "/reports" },
 ];
 
