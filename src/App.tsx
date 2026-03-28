@@ -36,6 +36,7 @@ import BudgetPlanning from "./pages/BudgetPlanning";
 import BudgetTracking from "./pages/BudgetTracking";
 import BudgetVarianceAnalysis from "./pages/BudgetVarianceAnalysis";
 import VoucherManagement from "./pages/VoucherManagement";
+import AuditManagement from "./pages/AuditManagement";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const App = () => (
             <Route path="/budget-tracking" element={<ProtectedRoute><BudgetTracking /></ProtectedRoute>} />
             <Route path="/budget-variance" element={<ProtectedRoute><BudgetVarianceAnalysis /></ProtectedRoute>} />
             <Route path="/vouchers" element={<ProtectedRoute><VoucherManagement /></ProtectedRoute>} />
+            <Route path="/audit" element={<ProtectedRoute><AuditManagement /></ProtectedRoute>} />
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
             <Route path="/register-user" element={<ProtectedRoute><RegisterUser /></ProtectedRoute>} />

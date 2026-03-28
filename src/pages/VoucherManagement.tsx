@@ -22,10 +22,12 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { VoucherCard } from "@/components/voucher/VoucherCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Voucher, VoucherUsage } from "@/types/voucher";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAudit } from "@/hooks/useAudit";
+import { EntityType } from "@/types/audit";
 
 // Mock data
 const mockVouchers: Voucher[] = [
@@ -166,6 +168,7 @@ const mockUsage: VoucherUsage[] = [
 ];
 
 export default function VoucherManagement() {
+  const { logView, logCreate, logUpdate, logDelete, logExport, logActivate, logDeactivate } = useAudit();
   const [vouchers, setVouchers] = useState<Voucher[]>(mockVouchers);
   const [usage] = useState<VoucherUsage[]>(mockUsage);
   const [isLoading, setIsLoading] = useState(false);
@@ -175,6 +178,11 @@ export default function VoucherManagement() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showUsageModal, setShowUsageModal] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+
+  // Log page view
+  useEffect(() => {
+    logView(EntityType.VOUCHER, undefined, "Voucher Management");
+  }, [logView]);
 
   // Calculate statistics
   const activeVouchers = vouchers.filter(v => v.status === "active");
@@ -203,31 +211,49 @@ export default function VoucherManagement() {
   const handleEdit = (voucher: Voucher) => {
     setSelectedVoucher(voucher);
     setShowCreateModal(true);
+    logView(EntityType.VOUCHER, voucher.id, voucher.title);
   };
 
   const handleDelete = (voucher: Voucher) => {
     if (confirm(`Are you sure you want to delete voucher "${voucher.title}"?`)) {
       setVouchers(prev => prev.filter(v => v.id !== voucher.id));
+      logDelete(EntityType.VOUCHER, voucher.id, voucher.title, voucher);
     }
   };
 
   const handleViewUsage = (voucher: Voucher) => {
     setSelectedVoucher(voucher);
     setShowUsageModal(true);
+    logView(EntityType.VOUCHER, voucher.id, `${voucher.title} - Usage Details`);
   };
 
   const handleToggleStatus = (voucher: Voucher) => {
     const newStatus = voucher.status === "active" ? "inactive" : "active";
+    const oldStatus = voucher.status;
+    
     setVouchers(prev => prev.map(v => 
       v.id === voucher.id 
         ? { ...v, status: newStatus, updatedAt: new Date().toISOString() }
         : v
     ));
+
+    // Log the status change
+    if (newStatus === "active") {
+      logActivate(EntityType.VOUCHER, voucher.id, voucher.title);
+    } else {
+      logDeactivate(EntityType.VOUCHER, voucher.id, voucher.title);
+    }
+
+    logUpdate(EntityType.VOUCHER, voucher.id, voucher.title, 
+      { status: oldStatus }, 
+      { status: newStatus }
+    );
   };
 
   const handleCreateVoucher = () => {
     setSelectedVoucher(null);
     setShowCreateModal(true);
+    logView(EntityType.VOUCHER, undefined, "Create New Voucher");
   };
 
   return (

@@ -4,12 +4,11 @@ import {
   Calculator,
   FileText,
   TrendingUp,
-  Balance,
+  Scale,
   Receipt,
   DollarSign,
   AlertTriangle,
   ArrowUpRight,
-  ArrowDownRight,
   Plus,
   Search,
   Filter
@@ -53,7 +52,7 @@ const accountingStats = [
     value: "$425,890",
     change: "+8.3% vs last month",
     changeType: "positive" as const,
-    icon: Balance,
+    icon: Scale,
     trend: "up" as const
   }
 ];
@@ -240,7 +239,7 @@ export default function Accounting() {
         <div className="sphere-card p-5">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-              <Balance size={16} className="text-blue-600" />
+              <Scale size={16} className="text-blue-600" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">Account Balance</h3>

@@ -25,36 +25,86 @@ import {
   Receipt,
   Target,
   Ticket,
+  Shield,
+  ChevronDown,
+  ChevronRight,
+  Handshake,
+  CreditCard,
+  PiggyBank,
+  Scale,
+  TrendingDown,
+  FileSpreadsheet,
+  Search,
+  Maximize2,
+  Minimize2
 } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
+import { useState } from "react";
 
-const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/" },
-  { label: "Employees", icon: Users, href: "/employees" },
-  { label: "Attendance", icon: Clock, href: "/attendance" },
-  { label: "Tasks", icon: ListTodo, href: "/tasks" },
-  { label: "Recruitment", icon: UserPlus, href: "/recruitment" },
-  { label: "Onboarding", icon: ClipboardList, href: "/onboarding" },
-  { label: "Leave", icon: CalendarDays, href: "/leave" },
-  { label: "Departments", icon: Building2, href: "/departments" },
-  { label: "Salary", icon: Wallet, href: "/salary" },
-  { label: "Payroll", icon: DollarSign, href: "/payroll" },
-  { label: "Inventory", icon: Package, href: "/inventory" },
-  { label: "Warehouses", icon: Warehouse, href: "/warehouses" },
-  { label: "Stock Management", icon: TrendingUp, href: "/stock-management" },
-  { label: "Customers", icon: User, href: "/customers" },
-  { label: "Suppliers", icon: Building2, href: "/suppliers" },
-  { label: "Invoices", icon: FileText, href: "/invoices" },
-  { label: "Accounting", icon: Calculator, href: "/accounting" },
-  { label: "Chart of Accounts", icon: TrendingUp, href: "/chart-of-accounts" },
-  { label: "Journal Entries", icon: Receipt, href: "/journal-entries" },
-  { label: "Trial Balance", icon: BarChart3, href: "/trial-balance" },
-  { label: "Budget", icon: Target, href: "/budget" },
-  { label: "Budget Planning", icon: Calculator, href: "/budget-planning" },
-  { label: "Budget Tracking", icon: Wallet, href: "/budget-tracking" },
-  { label: "Budget Variance", icon: BarChart3, href: "/budget-variance" },
-  { label: "Vouchers", icon: Ticket, href: "/vouchers" },
-  { label: "Reports", icon: BarChart3, href: "/reports" },
+// Organized navigation groups
+const navigationGroups = [
+  {
+    title: "Main",
+    items: [
+      { label: "Dashboard", icon: LayoutDashboard, href: "/" },
+      { label: "Reports", icon: BarChart3, href: "/reports" },
+      { label: "Audit", icon: Shield, href: "/audit" }
+    ]
+  },
+  {
+    title: "HR Management",
+    items: [
+      { label: "Employees", icon: Users, href: "/employees" },
+      { label: "Attendance", icon: Clock, href: "/attendance" },
+      { label: "Tasks", icon: ListTodo, href: "/tasks" },
+      { label: "Recruitment", icon: UserPlus, href: "/recruitment" },
+      { label: "Onboarding", icon: ClipboardList, href: "/onboarding" },
+      { label: "Leave", icon: CalendarDays, href: "/leave" },
+      { label: "Departments", icon: Building2, href: "/departments" }
+    ]
+  },
+  {
+    title: "Payroll & Benefits",
+    items: [
+      { label: "Salary", icon: Wallet, href: "/salary" },
+      { label: "Payroll", icon: DollarSign, href: "/payroll" },
+      { label: "Vouchers", icon: Ticket, href: "/vouchers" }
+    ]
+  },
+  {
+    title: "Accounting",
+    items: [
+      { label: "Accounting", icon: Calculator, href: "/accounting" },
+      { label: "Chart of Accounts", icon: Scale, href: "/chart-of-accounts" },
+      { label: "Journal Entries", icon: Receipt, href: "/journal-entries" },
+      { label: "Trial Balance", icon: BarChart3, href: "/trial-balance" }
+    ]
+  },
+  {
+    title: "Budget Management",
+    items: [
+      { label: "Budget", icon: Target, href: "/budget" },
+      { label: "Budget Planning", icon: Calculator, href: "/budget-planning" },
+      { label: "Budget Tracking", icon: Wallet, href: "/budget-tracking" },
+      { label: "Budget Variance", icon: TrendingDown, href: "/budget-variance" }
+    ]
+  },
+  {
+    title: "CRM",
+    items: [
+      { label: "Customers", icon: User, href: "/customers" },
+      { label: "Suppliers", icon: Building2, href: "/suppliers" },
+      { label: "Invoices", icon: FileText, href: "/invoices" }
+    ]
+  },
+  {
+    title: "Inventory",
+    items: [
+      { label: "Inventory", icon: Package, href: "/inventory" },
+      { label: "Warehouses", icon: Warehouse, href: "/warehouses" },
+      { label: "Stock Management", icon: TrendingUp, href: "/stock-management" }
+    ]
+  }
 ];
 
 const adminItems = [
@@ -65,8 +115,32 @@ const adminItems = [
 export function Sidebar() {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(["Main"]);
 
-  const renderNavItem = (item: typeof navItems[0]) => {
+  const toggleGroup = (groupTitle: string) => {
+    setExpandedGroups(prev => {
+      // If clicking on already expanded group, close it
+      if (prev.includes(groupTitle)) {
+        return prev.filter(g => g !== groupTitle);
+      }
+      // Otherwise, close all other groups and open only this one
+      return [groupTitle];
+    });
+  };
+
+  const expandAll = () => {
+    const allGroupTitles = navigationGroups.map(g => g.title);
+    setExpandedGroups(allGroupTitles);
+  };
+
+  const collapseAll = () => {
+    setExpandedGroups([]);
+  };
+
+  const isAllExpanded = expandedGroups.length === navigationGroups.length;
+  const isAnyExpanded = expandedGroups.length > 0;
+
+  const renderNavItem = (item: any) => {
     const active = location.pathname === item.href;
     return (
       <Link key={item.href} to={item.href}>
@@ -93,6 +167,50 @@ export function Sidebar() {
     );
   };
 
+  const renderNavigationGroup = (group: typeof navigationGroups[0]) => {
+    const isExpanded = expandedGroups.includes(group.title);
+    const hasActiveRoute = group.items.some(item => location.pathname === item.href);
+
+    return (
+      <div key={group.title} className="mb-2">
+        {/* Group Header */}
+        <button
+          onClick={() => toggleGroup(group.title)}
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors duration-150 ${
+            hasActiveRoute
+              ? "text-foreground font-medium bg-accent/50"
+              : "text-muted-foreground hover:text-foreground hover:bg-accent/30"
+          }`}
+        >
+          <span className="text-[11px] font-semibold uppercase tracking-wider">
+            {group.title}
+          </span>
+          <motion.div
+            animate={{ rotate: isExpanded ? 90 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <ChevronRight size={14} />
+          </motion.div>
+        </button>
+
+        {/* Group Items */}
+        <motion.div
+          initial={false}
+          animate={{ 
+            height: isExpanded ? "auto" : 0,
+            opacity: isExpanded ? 1 : 0
+          }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          className="overflow-hidden"
+        >
+          <div className="mt-1 space-y-0.5">
+            {group.items.map(renderNavItem)}
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <aside className="w-[240px] h-full border-r bg-card flex flex-col shrink-0">
       {/* Logo */}
@@ -109,18 +227,73 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {navItems.map(renderNavItem)}
+        {/* Expand/Collapse All Controls */}
+        <div className="mb-3 flex gap-1">
+          <button
+            onClick={expandAll}
+            disabled={isAllExpanded}
+            className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition-colors ${
+              isAllExpanded
+                ? "bg-muted text-muted-foreground cursor-not-allowed"
+                : "bg-accent/50 text-foreground hover:bg-accent"
+            }`}
+          >
+            <Maximize2 size={12} />
+            <span>Expand All</span>
+          </button>
+          <button
+            onClick={collapseAll}
+            disabled={!isAnyExpanded}
+            className={`flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded text-xs font-medium transition-colors ${
+              !isAnyExpanded
+                ? "bg-muted text-muted-foreground cursor-not-allowed"
+                : "bg-accent/50 text-foreground hover:bg-accent"
+            }`}
+          >
+            <Minimize2 size={12} />
+            <span>Collapse All</span>
+          </button>
+        </div>
+
+        {navigationGroups.map(renderNavigationGroup)}
 
         {/* Admin section */}
         {user?.role === "admin" && (
-          <>
-            <div className="pt-4 pb-1 px-3">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-                Administration
-              </span>
+          <div className="mt-4">
+            <div className="mb-2">
+              <button
+                onClick={() => toggleGroup("Administration")}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors duration-150 ${
+                  expandedGroups.includes("Administration")
+                    ? "text-foreground font-medium bg-accent/50"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/30"
+                }`}
+              >
+                <span className="text-[11px] font-semibold uppercase tracking-wider">
+                  Administration
+                </span>
+                <motion.div
+                  animate={{ rotate: expandedGroups.includes("Administration") ? 90 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronRight size={14} />
+                </motion.div>
+              </button>
             </div>
-            {adminItems.map(renderNavItem)}
-          </>
+            <motion.div
+              initial={false}
+              animate={{ 
+                height: expandedGroups.includes("Administration") ? "auto" : 0,
+                opacity: expandedGroups.includes("Administration") ? 1 : 0
+              }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-0.5">
+                {adminItems.map(renderNavItem)}
+              </div>
+            </motion.div>
+          </div>
         )}
       </nav>
 

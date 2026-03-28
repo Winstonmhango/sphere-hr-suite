@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from "react";
 
 interface User {
   email: string;
@@ -28,7 +28,28 @@ const DEFAULT_USER: User = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Try to get user from localStorage on initial load
+    try {
+      const storedUser = localStorage.getItem("auth");
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Save user to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      if (user) {
+        localStorage.setItem("auth", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("auth");
+      }
+    } catch (error) {
+      console.error("Error saving auth state:", error);
+    }
+  }, [user]);
 
   const login = useCallback(async (email: string, password: string) => {
     // Simulate network delay
